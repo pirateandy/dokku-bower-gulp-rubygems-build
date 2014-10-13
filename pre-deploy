@@ -9,36 +9,56 @@ cd /app &&
 
 sleep 1
 
-echo '-----> Installing Bower'
-if [ -f "./node_modules/bower/bin/bower" ]
+echo '-----> Checking for Ruby Gem deps'
+if [ -f "./Gemfile" ]
 then
-  echo 'Bower already installed. Skipping...'
+  echo '       Gemfile detected, installing gems...'
+  gem install bundler
+  bundle install
 else
-  npm install bower
+  echo '       No Gemfile present. Skipping...'
 fi
 
-echo '-----> Installing Bower Packages'
+sleep 1
+
+echo '-----> Checking for Bower deps'
 if [ -f "./bower.json" ]
 then
+  echo '       bower.json exists, handling deps...'
+
+  if [ -f "./node_modules/bower/bin/bower" ]
+  then
+    echo '       Bower already installed. Skipping...'
+  else
+    echo '-----> Installing Bower'
+    npm install bower
+  fi
+
+  echo '-----> Installing Bower Packages'
   ./node_modules/bower/bin/bower install --allow-root
 else
-  echo 'bower.json missing. Nothing to install...'
+  echo '       bower.json missing. Nothing to install...'
 fi
 
-echo '-----> Installing gulp'
-if [ -f "./node_modules/gulp/bin/gulp.js" ]
-then
-  echo 'gulp already installed. Skipping...'
-else
-  npm install gulp
-fi
-
-echo '-----> Runnging Tasks'
+sleep 1
+  
+echo '-----> Checking for gulp deps'
 if [ -f "./gulpfile.js" ]
 then
+  echo '       gulpfile.js exists, handling deps...'
+
+  if [ -f "./node_modules/gulp/bin/gulp.js" ]
+  then
+    echo '       gulp already installed. Skipping...'
+  else
+    echo '-----> Installing gulp'
+    npm install gulp
+  fi
+
+  echo '-----> Running gulp Tasks'
   ./node_modules/gulp/bin/gulp.js build
 else
-  echo 'gulpfile.js is missing. No tasks to run...'
+  echo '       gulpfile.js is missing. No tasks to run...'
 fi
 EOF
 )
