@@ -5,7 +5,7 @@ APP="$1";  IMAGE="dokku/$APP"
 
 RUN=$(cat <<EOF
 PATH=$PATH:/app/vendor/node/bin &&
-cd /app &&
+cd /app/static &&
 
 sleep 1
 
